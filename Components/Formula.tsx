@@ -3,14 +3,14 @@ import * as React from 'react';
 import * as lsystem from '../lsystem';
 
 
-type Props =
+export type FormulaProps =
   lsystem.Formula
-  & { onChange: (p: Props) => any };
+  & { onChange: (p: FormulaProps) => any };
 
 
-export default function Formula(props: Props) {
+export default function Formula(props: FormulaProps) {
   return (
-    <div>
+    <span>
       <input
         size={1}
         value={props.label}
@@ -27,6 +27,6 @@ export default function Formula(props: Props) {
             value: ev.target.value.toUpperCase().split(''),
         })}
       />
-    </div>
+    </span>
   );
 }
