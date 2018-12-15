@@ -6,6 +6,7 @@ import * as R from 'ramda';
 
 import * as lsystem from './lsystem';
 import Formula from './Components/Formula';
+import Operation from './Components/Operation';
 
 
 type Entry =
@@ -67,7 +68,21 @@ const addFormula = (state: State): State => ({
 });
 
 
-const appState = () => {
+const addOperation = (state: State): State => ({
+  ...state,
+  entries: [
+    ...state.entries, {
+      kind: 'operation', id: uuid(), value: {
+        label: state.lastLabel,
+        kind: 'forward',
+        value: 100,
+      }
+    },
+  ],
+});
+
+
+const lsystemState = () => {
   const [state, setState] = useState<State>({
     entries: [
       { kind: 'formula', id: uuid(), value: { label: 'A', value: ['A', 'B']} }
@@ -80,6 +95,11 @@ const appState = () => {
     actions: {
       addFormula: () => R.pipe(
         addFormula,
+        updateLastLabel,
+        setState,
+      )(state),
+      addOperation: () => R.pipe(
+        addOperation,
         updateLastLabel,
         setState,
       )(state),
@@ -99,14 +119,14 @@ const appState = () => {
 
 
 export default function App() {
-  const { state, actions } = appState();
+  const { state, actions } = lsystemState();
 
   const entries = state.entries.map(
     (e) => {
       const child =
         e.kind === 'formula'
         ? Formula({ ...e.value, onChange: (f) => actions.updateEntry(e.id, f)})
-        : <div />;
+        : Operation({ ...e.value, onChange: (op) => actions.updateEntry(e.id, op)});
 
       return (
         <EntryControls
@@ -123,6 +143,9 @@ export default function App() {
       {entries}
       <button onClick={actions.addFormula}>
         Add formula
+      </button>
+      <button onClick={actions.addOperation}>
+        Add operation
       </button>
     </div>
   );
