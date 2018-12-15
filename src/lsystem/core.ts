@@ -9,3 +9,9 @@ export type Operation =
       | { kind: 'forward', value: number }
       | { kind: 'rotate', value: number }
   );
+
+
+export type LSystemDefinition = {
+  operations: Operation[];
+  formulas: Formula[];
+}
