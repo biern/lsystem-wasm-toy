@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { lsystemState } from './src/lsystem';
+import { lsystemState, getValidLSystem } from './src/lsystem';
 
 import Formula from './Components/Formula';
 import Operation from './Components/Operation';
@@ -26,6 +26,8 @@ export default function App() {
     }
   );
 
+  const system = getValidLSystem(state.entries);
+
   return (
     <div>
       {entries}
@@ -35,6 +37,10 @@ export default function App() {
       <button onClick={actions.addOperation}>
         Add operation
       </button>
+      {system.fold(
+         (err) => err,
+         () => 'OK!',
+      )}
     </div>
   );
 }
