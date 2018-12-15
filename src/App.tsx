@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { lsystemState, getValidLSystem } from './src/lsystem';
+import { lsystemState, getValidLSystem } from './lsystem';
 
 import Formula from './Components/Formula';
 import Operation from './Components/Operation';
+
 
 
 export default function App() {

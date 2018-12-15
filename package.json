@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +20,8 @@
     "@types/ramda": "^0.25.42",
     "@types/react": "^16.7.13",
     "@types/react-dom": "^16.0.11",
-    "parcel": "^1.10.3",
+    "parcel-bundler": "^1.10.3",
+    "parcel-plugin-wasm.rs": "^1.2.6",
     "typescript": "^3.2.2"
   }
 }

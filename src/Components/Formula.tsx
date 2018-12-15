@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as lsystem from '../lsystem';
+import * as lsystem from '../lsystem/core';
 
 
 export type FormulaProps =
