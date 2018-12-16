@@ -15,6 +15,19 @@ export const getValidLSystem = (
     .filter(({ kind }) => kind === 'formula')
     .map((e) => e.value) as Formula[];
 
+  const operations =
+    entries
+    .filter(({ kind }) => kind === 'operation')
+    .map((e) => e.value) as Operation[];
+
+  if (formulas.length === 0) {
+    return left('At least one formula is required');
+  }
+
+  if (operations.length === 0) {
+    return left('At least one operation is required');
+  }
+
   const validateFormula = (f: Formula): Either<string, Formula> => {
     return array.traverse(either)(
       f.value,
@@ -37,5 +50,5 @@ export const getValidLSystem = (
   return either
     .of<string, typeof buildLSystemDefinition>(buildLSystemDefinition)
     .ap_(validatedFormulas)
-    .ap_(right([]));
+    .ap_(right(operations));
 }
