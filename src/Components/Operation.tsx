@@ -25,18 +25,23 @@ export default function Operation(props: OperationProps) {
   );
 
   return (
-    <span>
-    <input
-    size={1}
+    <span
+      style={{
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <input
+        size={1}
         value={props.label}
         onChange={(ev) => props.onChange({
-            ...props,
-            label: ev.target.value.toUpperCase()[0],
+          ...props,
+          label: ev.target.value.toUpperCase()[0],
         })}
       />
       =
       <select>
-    {operationKinds.map((k) => (<option value={k} selected={props.kind === k}>{k}</option>))}
+        {operationKinds.map((k) => (<option value={k} selected={props.kind === k}>{k}</option>))}
       </select>
       {renderOperationControls()}
     </span>

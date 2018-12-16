@@ -10,21 +10,26 @@ export type FormulaProps =
 
 export default function Formula(props: FormulaProps) {
   return (
-    <span>
+    <span
+      style={{
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
       <input
         size={1}
         value={props.label}
         onChange={(ev) => props.onChange({
-            ...props,
-            label: ev.target.value.toUpperCase()[0],
+          ...props,
+          label: ev.target.value.toUpperCase()[0],
         })}
       />
       =
       <input
         value={props.value.join('')}
         onChange={(ev) => props.onChange({
-            ...props,
-            value: ev.target.value.toUpperCase().split(''),
+          ...props,
+          value: ev.target.value.toUpperCase().split(''),
         })}
       />
     </span>

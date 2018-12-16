@@ -9,6 +9,7 @@ import Operation from './Components/Operation';
 
 export default function App() {
   const { state, actions } = lsystemState();
+  const canvasEl = React.useRef(null);
 
   const entries = state.entries.map(
     (e) => {
@@ -30,21 +31,42 @@ export default function App() {
   const system = getValidLSystem(state.entries);
 
   return (
-    <div>
-      {entries}
-      <button onClick={actions.addFormula}>
-        Add formula
-      </button>
-      <button onClick={actions.addOperation}>
-        Add operation
-      </button>
-      {system.fold(
-         (err) => err,
-         () => 'OK!',
-      )}
+    <div
+      style={{
+        display: "flex",
+        height: "100%",
+      }}>
+      <div
+        style={{
+          marginRight: "1rem",
+        }}
+      >
+        <h2>LSystem</h2>
+        {entries}
+        <button onClick={actions.addFormula}>
+          Add formula
+        </button>
+        <button onClick={actions.addOperation}>
+          Add operation
+        </button>
+        <div>
+          {system.fold(
+             (err) => err,
+             () => '',
+          )}
+        </div>
+      </div>
+      <canvas
+        style={{
+          flexGrow: 1,
+          border: "1px solid black",
+        }}
+        ref={canvasEl}
+      />
     </div>
   );
 }
+
 
 
 type EntryControlsProps =
@@ -53,7 +75,12 @@ type EntryControlsProps =
 
 function EntryControls(props: EntryControlsProps) {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
       {props.child}
       <button onClick={props.onRemove}>delete</button>
     </div>
