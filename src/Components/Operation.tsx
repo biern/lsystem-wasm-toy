@@ -24,6 +24,14 @@ export default function Operation(props: OperationProps) {
     />
   );
 
+  const onKindChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
+    if (ev.target.value === 'forward') {
+      props.onChange({ ...props, kind: 'forward', value: 100 });
+    } else if (ev.target.value === 'rotate') {
+      props.onChange({ ...props, kind: 'rotate', value: 100 });
+    }
+  }
+
   return (
     <span
       style={{
@@ -40,8 +48,11 @@ export default function Operation(props: OperationProps) {
         })}
       />
       =
-      <select>
-        {operationKinds.map((k) => (<option value={k} selected={props.kind === k}>{k}</option>))}
+      <select
+          value={props.kind}
+          onChange={onKindChange}
+      >
+        {operationKinds.map((k) => (<option value={k}>{k}</option>))}
       </select>
       {renderOperationControls()}
     </span>
