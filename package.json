@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "publish": "surge dist noisy-snake.surge.sh"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "@types/react-dom": "^16.0.11",
     "parcel-bundler": "^1.10.3",
     "parcel-plugin-wasm.rs": "^1.2.6",
+    "surge": "^0.20.1",
     "typescript": "^3.2.2"
   }
 }
