@@ -1,5 +1,6 @@
 use wasm_bindgen::prelude::*;
 use web_sys::CanvasRenderingContext2d;
+use std::fmt;
 
 use lsystem::{CompiledLSystem,Symbol};
 
@@ -7,6 +8,13 @@ use lsystem::{CompiledLSystem,Symbol};
 pub struct Operation {
     pub symbol: Symbol,
     pub execute: Box<Fn(&CanvasRenderingContext2d) -> Result<(), JsValue>>,
+}
+
+
+impl fmt::Debug for Operation {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Operation {:?}", self.symbol)
+    }
 }
 
 
@@ -89,9 +97,11 @@ pub fn draw(
 ) -> Result<(), JsValue> {
 
     for token in compiled {
-        let op = operations.iter().find(|o| o.symbol == *token)
-            .ok_or(format!("Unknown operation {}", token))?;
-        (op.execute)(ctx)?;
+        let found = operations.iter().find(|o| o.symbol == *token);
+        match found {
+            Option::Some(op) => (op.execute)(ctx)?,
+            Option::None => (),
+        }
     }
 
     Result::Ok(())

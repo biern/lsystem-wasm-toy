@@ -2,10 +2,11 @@ pub type CompiledLSystem = Vec<Symbol>;
 
 pub type LSystem = Vec<Formula>;
 
-pub type Symbol = char;
+pub type Symbol = String;
 pub type Tokens = Vec<Symbol>;
 
 
+#[derive(Serialize, Deserialize)]
 pub struct Formula {
     pub symbol: Symbol,
     pub tokens: Tokens,
@@ -15,7 +16,7 @@ pub struct Formula {
 pub fn compile(system: &LSystem, iterations: u32) -> Result<CompiledLSystem, String> {
     let root_formula = system.first()
         .ok_or(String::from("LSystem is empty"))?;
-    let axiom = root_formula.symbol;
+    let axiom = root_formula.symbol.clone();
 
     let range = 0..iterations;
 

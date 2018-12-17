@@ -1,53 +1,40 @@
 use lsystem::*;
 
 
+pub fn inline_formula(label: &str, tokens: &str) -> Formula {
+    Formula {
+        symbol: String::from(label),
+        tokens: String::from(tokens).split("").map(|s| s.into()).collect(),
+    }
+}
+
+
 pub fn get_algae_formula() -> LSystem {
     vec![
-        Formula { symbol: 'A', tokens: vec!['A', 'B'] },
-        Formula { symbol: 'B', tokens: vec!['A'] },
+        inline_formula("A", "AB"),
+        inline_formula("B", "A"),
     ]
 }
 
 
 pub fn koch_curve() -> LSystem {
     vec![
-        Formula {
-            symbol: 'F',
-            tokens: vec!['F', '+', 'F', '-', 'F', '-', 'F', '+', 'F'],
-        },
+        inline_formula("F", "F+F-F-F+F"),
     ]
 }
 
 
 pub fn arrowhead() -> LSystem {
     vec![
-        Formula {
-            symbol: 'A',
-            tokens: vec!['B', '-', 'A', '-', 'B'],
-        },
-        Formula {
-            symbol: 'B',
-            tokens: vec!['A', '+', 'B', '+', 'A'],
-        },
+        inline_formula("A", "B-A-B"),
+        inline_formula("B", "A+B+A"),
     ]
 }
 
 
 pub fn plant() -> LSystem {
     vec![
-        Formula {
-            symbol: 'X',
-            tokens: vec![
-                'F', '+',
-                '[', '[', 'X', ']', '-', 'X', ']',
-                '-', 'F',
-                '[', '-', 'F', 'X', ']',
-                '+', 'X',
-            ],
-        },
-        Formula {
-            symbol: 'F',
-            tokens: vec!['F', 'F'],
-        },
+        inline_formula("X", "F+[[X]-X]-F[-FX]+X"),
+        inline_formula("F", "FF"),
     ]
 }

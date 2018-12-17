@@ -6,6 +6,12 @@ extern crate cfg_if;
 extern crate wasm_bindgen;
 extern crate web_sys;
 
+#[macro_use]
+extern crate serde_derive;
+
+extern crate serde;
+extern crate serde_json;
+
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 
@@ -31,6 +37,15 @@ cfg_if! {
         #[global_allocator]
         static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
     }
+}
+
+
+#[wasm_bindgen]
+extern "C" {
+    // Use `js_namespace` here to bind `console.log(..)` instead of just
+    // `log(..)`
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: String);
 }
 
 
@@ -109,9 +124,9 @@ pub fn draw_stuff(
     let compiled = lsystem::compile(&system, i)?;
 
     let operations = vec![
-        Box::new(draw::op_forward('F', 5.0)),
-        Box::new(draw::op_rotate('-', 90.0)),
-        Box::new(draw::op_rotate('+', -90.0)),
+        Box::new(draw::op_forward(String::from("F"), 5.0)),
+        Box::new(draw::op_rotate(String::from("-"), 90.0)),
+        Box::new(draw::op_rotate(String::from("+"), -90.0)),
     ];
 
     draw::draw(&context, &compiled, &operations)?;
@@ -119,89 +134,76 @@ pub fn draw_stuff(
 }
 
 
-#[wasm_bindgen]
-pub fn draw_arrowhead(
-    context: web_sys::CanvasRenderingContext2d,
-    i: u32,
-) -> Result<(), JsValue> {
-    let canvas = context.canvas().unwrap();
-    let width = canvas.width();
-    let height = canvas.height();
+// #[wasm_bindgen]
+// pub fn draw_arrowhead(
+//     context: web_sys::CanvasRenderingContext2d,
+//     i: u32,
+// ) -> Result<(), JsValue> {
+//     let canvas = context.canvas().unwrap();
+//     let width = canvas.width();
+//     let height = canvas.height();
 
-    context.translate((width / 2).into(), 0.0)?;
-    context.rotate(30.0 * std::f64::consts::PI / 180.0)?;
+//     context.translate((width / 2).into(), 0.0)?;
+//     context.rotate(30.0 * std::f64::consts::PI / 180.0)?;
 
-    // let system = samples::get_algae_formula();
-    let system = samples::arrowhead();
-    let compiled = lsystem::compile(&system, i)?;
+//     // let system = samples::get_algae_formula();
+//     let system = samples::arrowhead();
+//     let compiled = lsystem::compile(&system, i)?;
 
-    let operations = vec![
-        Box::new(draw::op_forward('A', 3.0)),
-        Box::new(draw::op_forward('B', 3.0)),
-        Box::new(draw::op_rotate('+', 60.0)),
-        Box::new(draw::op_rotate('-', -60.0)),
-    ];
+//     let operations = vec![
+//         Box::new(draw::op_forward('A', 3.0)),
+//         Box::new(draw::op_forward('B', 3.0)),
+//         Box::new(draw::op_rotate('+', 60.0)),
+//         Box::new(draw::op_rotate('-', -60.0)),
+//     ];
 
-    draw::draw(&context, &compiled, &operations)?;
+//     draw::draw(&context, &compiled, &operations)?;
 
-    Result::Ok(())
-}
+//     Result::Ok(())
+// }
 
-#[wasm_bindgen]
-extern "C" {
-    // Use `js_namespace` here to bind `console.log(..)` instead of just
-    // `log(..)`
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: String);
-}
+// #[wasm_bindgen]
+// pub fn draw_plant(
+//     context: web_sys::CanvasRenderingContext2d,
+//     i: u32,
+// ) -> Result<(), JsValue> {
+//     let canvas = context.canvas().unwrap();
+//     let width = canvas.width();
+//     let height = canvas.height();
 
+//     context.translate((width / 10).into(), height.into())?;
+//     context.rotate(200.0 * std::f64::consts::PI / 180.0)?;
 
-#[wasm_bindgen]
-pub fn draw_plant(
-    context: web_sys::CanvasRenderingContext2d,
-    i: u32,
-) -> Result<(), JsValue> {
-    let canvas = context.canvas().unwrap();
-    let width = canvas.width();
-    let height = canvas.height();
+//     let system = samples::plant();
+//     let compiled = lsystem::compile(&system, i)?;
 
-    context.translate((width / 10).into(), height.into())?;
-    context.rotate(200.0 * std::f64::consts::PI / 180.0)?;
+//     // log(format!("Compiled {:?}", compiled));
 
-    let system = samples::plant();
-    let compiled = lsystem::compile(&system, i)?;
+//     let operations = vec![
+//         Box::new(draw::op_forward('F', 5.0)),
+//         Box::new(draw::op_noop('X')),
+//         Box::new(draw::op_rotate('+', -25.0)),
+//         Box::new(draw::op_rotate('-', 25.0)),
+//         Box::new(draw::op_push('[')),
+//         Box::new(draw::op_pop(']')),
+//     ];
 
-    // log(format!("Compiled {:?}", compiled));
+//     draw::draw(&context, &compiled, &operations)?;
 
-    let operations = vec![
-        Box::new(draw::op_forward('F', 5.0)),
-        Box::new(draw::op_noop('X')),
-        Box::new(draw::op_rotate('+', -25.0)),
-        Box::new(draw::op_rotate('-', 25.0)),
-        Box::new(draw::op_push('[')),
-        Box::new(draw::op_pop(']')),
-    ];
-
-    draw::draw(&context, &compiled, &operations)?;
-
-    Result::Ok(())
-}
+//     Result::Ok(())
+// }
 
 
 #[wasm_bindgen]
-pub fn draw_compiled(
+pub fn draw_operations(
     context: web_sys::CanvasRenderingContext2d,
     operation_pointers: Vec<i32>,
-    compiled: String,
+    compiled_string: String,
 ) -> Result<(), JsValue>  {
-    log(format!("Raw {:?}", operation_pointers));
-
     let operations: Vec<Box<draw::Operation>> = operation_pointers.iter().map(|p| {
         unsafe { Box::from_raw(*p as *mut draw::Operation) }
     }).collect();
 
-    log(format!("Compiled {:?}", operations[0].symbol));
-
     let canvas = context.canvas().unwrap();
     let width = canvas.width();
     let height = canvas.height();
@@ -209,7 +211,26 @@ pub fn draw_compiled(
     context.translate((width / 10).into(), height.into())?;
     context.rotate(200.0 * std::f64::consts::PI / 180.0)?;
 
-    draw::draw(&context, &compiled.chars().collect(), &operations)?;
+    let compiled: lsystem::CompiledLSystem =
+        compiled_string.split("")
+        .map(|c| c.into())
+        .filter(|s: &String| !s.is_empty())
+        .collect();
+
+    log(format!("Compiled {:?}", compiled));
+
+    draw::draw(&context, &compiled, &operations)?;
 
     Result::Ok(())
+}
+
+
+#[wasm_bindgen]
+pub fn compile(data: String, iterations: u32) -> Result<String, JsValue> {
+    let system: lsystem::LSystem = serde_json::from_str(&data)
+        .map_err(|e| e.to_string())?;
+
+    let compiled = lsystem::compile(&system, iterations)?;
+
+    Result::Ok(compiled.join(""))
 }

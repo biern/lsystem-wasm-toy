@@ -1,15 +1,21 @@
+import * as R from 'ramda';
 import * as React from 'react';
 
 import { lsystemState, getValidLSystem } from './lsystem';
 
 import Formula from './Components/Formula';
 import Operation from './Components/Operation';
+import { useDraw } from './lsystem/draw';
 
 
 
 export default function App() {
   const { state, actions } = lsystemState();
   const canvasEl = React.useRef(null);
+  const system = getValidLSystem(state.entries);
+
+  useDraw(canvasEl, system.fold(R.always(undefined), R.identity));
+
 
   const entries = state.entries.map(
     (e) => {
@@ -27,8 +33,6 @@ export default function App() {
       );
     }
   );
-
-  const system = getValidLSystem(state.entries);
 
   return (
     <div
