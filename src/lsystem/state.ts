@@ -84,7 +84,7 @@ export const lsystemState = () => {
   const [state, setState] = useState<State>({
     entries: [
       { kind: 'formula', id: uuid(), value: { label: 'A', value: ['A', 'B']} },
-      { kind: 'operation', id: uuid(), value: { label: 'B', kind: 'forward', value: 100} },
+      { kind: 'operation', id: uuid(), value: { label: 'B', kind: 'forward', value: 50 } },
     ],
     lastLabel: 'B',
     iterations: 3,

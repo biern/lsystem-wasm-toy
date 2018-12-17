@@ -16,7 +16,7 @@ const operationKinds: Array<lsystem.Operation['kind']> =
 const defaultOperations: {
   [k in lsystem.Operation['kind']]: lsystem.Operation
 } = {
-  forward: { kind: 'forward', label: 'A', value: 100 },
+  forward: { kind: 'forward', label: 'A', value: 50 },
   rotate: { kind: 'rotate', label: 'A', value: 45 },
   "state-pop": { kind: 'state-pop', label: 'A' },
   "state-push": { kind: 'state-push', label: 'A' },
