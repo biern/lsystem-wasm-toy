@@ -1,16 +1,17 @@
 import * as R from 'ramda';
 import * as React from 'react';
 
-import { lsystemState, getValidLSystem } from './lsystem';
-
 import Formula from './Components/Formula';
 import Operation from './Components/Operation';
+import { lsystemState, getValidLSystem } from './lsystem';
 import { useDraw } from './lsystem/draw';
-
+import { useInUrlState } from './lsystem/serialization';
 
 
 export default function App() {
-  const { state, actions } = lsystemState();
+  const { state, setState, actions } = lsystemState();
+  useInUrlState(state, setState);
+
   const canvasEl = React.useRef(null);
   const system = getValidLSystem(state.entries);
 

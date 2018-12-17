@@ -90,6 +90,7 @@ export const lsystemState = () => {
 
   return {
     state,
+    setState,
     actions: {
       addFormula: () => R.pipe(
         addFormula,
