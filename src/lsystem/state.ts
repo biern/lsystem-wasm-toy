@@ -16,6 +16,7 @@ export type State = {
   entries: Entry[];
   lastLabel: string;
   iterations: number;
+  start?: [number, number];
 };
 
 
@@ -82,10 +83,12 @@ const addOperation = (state: State): State => ({
 export const lsystemState = () => {
   const [state, setState] = useState<State>({
     entries: [
-      { kind: 'formula', id: uuid(), value: { label: 'A', value: ['A', 'B']} }
+      { kind: 'formula', id: uuid(), value: { label: 'A', value: ['A', 'B']} },
+      { kind: 'operation', id: uuid(), value: { label: 'B', kind: 'forward', value: 100} },
     ],
     lastLabel: 'B',
     iterations: 3,
+    start: undefined,
   });
 
   return {
@@ -112,6 +115,10 @@ export const lsystemState = () => {
         updateLastLabel,
         setState,
       )(state),
+      setIterations: (iterations: number) =>
+        setState({...state, iterations}),
+      setStartPosition: (pos: [number, number]) =>
+        setState({ ...state, start: pos }),
     },
   }
 }

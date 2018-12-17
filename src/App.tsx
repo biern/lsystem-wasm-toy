@@ -12,11 +12,15 @@ export default function App() {
   const { state, setState, actions } = lsystemState();
   useInUrlState(state, setState);
 
-  const canvasEl = React.useRef(null);
+  const canvasEl = React.useRef<HTMLCanvasElement>(null);
   const system = getValidLSystem(state.entries);
 
-  useDraw(canvasEl, system.fold(R.always(undefined), R.identity));
-
+  useDraw(
+    canvasEl,
+    system.fold(R.always(undefined), R.identity),
+    state.iterations,
+    state.start,
+  );
 
   const entries = state.entries.map(
     (e) => {
@@ -48,6 +52,19 @@ export default function App() {
       >
         <h2>LSystem</h2>
         {entries}
+        <div>
+          iterations:
+          <input
+            type="number"
+            size={1}
+            onChange={(ev) => actions.setIterations(parseInt(ev.target.value))}
+            value={state.iterations}
+            style={{
+              marginLeft: '1em',
+              width: '3em',
+            }}
+          />
+        </div>
         <button onClick={actions.addFormula}>
           Add formula
         </button>
@@ -65,13 +82,28 @@ export default function App() {
         style={{
           flexGrow: 1,
           border: "1px solid black",
+          cursor: "pointer",
         }}
         ref={canvasEl}
+        onClick={(ev) => actions.setStartPosition(
+          getCursorPosition(canvasEl.current!, ev)
+        )}
       />
     </div>
   );
 }
 
+
+function getCursorPosition(canvas: HTMLCanvasElement, event: any): [number, number] {
+  const rect = canvas.getBoundingClientRect();
+
+  console.log(event.clientX, rect.left);
+
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  return [x, y];
+}
 
 
 type EntryControlsProps =
@@ -87,7 +119,7 @@ function EntryControls(props: EntryControlsProps) {
       }}
     >
       {props.child}
-      <button onClick={props.onRemove}>delete</button>
+      <button onClick={props.onRemove}>x</button>
     </div>
   );
 }

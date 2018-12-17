@@ -34,8 +34,12 @@ const toWasmFormulas = (formulas: Formula[]): string => {
 export const useDraw = (
   ref: React.Ref<HTMLCanvasElement>,
   system: LSystemDefinition | undefined,
+  iterations: number,
+  pos?: [number, number],
 ) => {
   React.useEffect(() => {
+    console.log('pos', pos);
+
     if (system && ref && typeof ref !== 'function' && ref.current) {
       const canvas = ref.current;
       const ctx = canvas.getContext('2d')!;
@@ -49,11 +53,16 @@ export const useDraw = (
       ctx.shadowColor = 'black';
       ctx.shadowBlur = 5;
 
+      pos = pos || [canvas.width / 2, canvas.height / 2];
+
+      ctx.translate(pos[0], pos[1]);
+      ctx.rotate(180);
+
       const operations = buildOperationPointers(system.operations);
 
       if (operations.length) {
         const formulas = toWasmFormulas(system.formulas);
-        const compiled = wasmDraw.compile(formulas, 3);
+        const compiled = wasmDraw.compile(formulas, iterations);
 
         wasmDraw.draw_operations(
           ctx,

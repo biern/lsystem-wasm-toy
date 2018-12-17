@@ -204,13 +204,6 @@ pub fn draw_operations(
         unsafe { Box::from_raw(*p as *mut draw::Operation) }
     }).collect();
 
-    let canvas = context.canvas().unwrap();
-    let width = canvas.width();
-    let height = canvas.height();
-
-    context.translate((width / 10).into(), height.into())?;
-    context.rotate(200.0 * std::f64::consts::PI / 180.0)?;
-
     let compiled: lsystem::CompiledLSystem =
         compiled_string.split("")
         .map(|c| c.into())
@@ -218,6 +211,7 @@ pub fn draw_operations(
         .collect();
 
     log(format!("Compiled {:?}", compiled));
+    log(format!("Operations {:?}", operations));
 
     draw::draw(&context, &compiled, &operations)?;
 

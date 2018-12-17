@@ -17,7 +17,7 @@ const defaultOperations: {
   [k in lsystem.Operation['kind']]: lsystem.Operation
 } = {
   forward: { kind: 'forward', label: 'A', value: 100 },
-  rotate: { kind: 'forward', label: 'A', value: 45 },
+  rotate: { kind: 'rotate', label: 'A', value: 45 },
   "state-pop": { kind: 'state-pop', label: 'A' },
   "state-push": { kind: 'state-push', label: 'A' },
 };
@@ -28,7 +28,11 @@ export default function Operation(props: OperationProps) {
   const renderOperationControls = () => {
     if (props.kind === 'forward' || props.kind === 'rotate') {
       return (<input
+        style={{
+          width: '5em',
+        }}
         type="number"
+        size={2}
         value={props.value}
         onChange={(e) => {
           const value = parseFloat(e.target.value);
