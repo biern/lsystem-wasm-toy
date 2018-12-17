@@ -35,6 +35,20 @@ pub fn op_rotate_pointer(symbol: Symbol, amount: f64) -> i32 {
 }
 
 
+#[wasm_bindgen]
+pub fn op_push_pointer(symbol: Symbol) -> i32 {
+    let op = Box::new(op_pop(symbol));
+    Box::into_raw(op) as i32
+}
+
+
+#[wasm_bindgen]
+pub fn op_pop_pointer(symbol: Symbol) -> i32 {
+    let op = Box::new(op_pop(symbol));
+    Box::into_raw(op) as i32
+}
+
+
 pub fn op_forward(symbol: Symbol, amount: f64) -> Operation {
     Operation {
         symbol,

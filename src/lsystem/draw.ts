@@ -12,10 +12,14 @@ const buildOperationPointers = (operations: Operation[]): Array<number> => {
       return wasmDraw.op_forward_pointer(op.label, op.value);
     } else if (op.kind === 'rotate') {
       return wasmDraw.op_rotate_pointer(op.label, op.value);
+    } else if (op.kind === 'state-pop') {
+      return wasmDraw.op_pop_pointer(op.label);
+    } else if (op.kind === 'state-push') {
+      return wasmDraw.op_push_pointer(op.label);
     } else {
       throw new Error("Operation not supported");
     }
-  })
+  });
 }
 
 

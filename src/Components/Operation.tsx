@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import * as React from 'react';
 
 import * as lsystem from '../lsystem/core';
@@ -5,31 +6,45 @@ import * as lsystem from '../lsystem/core';
 
 export type OperationProps =
   lsystem.Operation
-  & { onChange: (p: OperationProps) => any };
+  & { onChange: (p: lsystem.Operation) => any };
 
 
-const operationKinds: Array<lsystem.Operation['kind']> = ['forward', 'rotate'];
+const operationKinds: Array<lsystem.Operation['kind']> =
+  ['forward', 'rotate', 'state-push', 'state-pop'];
+
+
+const defaultOperations: {
+  [k in lsystem.Operation['kind']]: lsystem.Operation
+} = {
+  forward: { kind: 'forward', label: 'A', value: 100 },
+  rotate: { kind: 'forward', label: 'A', value: 45 },
+  "state-pop": { kind: 'state-pop', label: 'A' },
+  "state-push": { kind: 'state-push', label: 'A' },
+};
+
 
 
 export default function Operation(props: OperationProps) {
-  const renderOperationControls = () => (
-    <input
-      type="number"
-      value={props.value}
-      onChange={(e) => {
-        const value = parseFloat(e.target.value);
+  const renderOperationControls = () => {
+    if (props.kind === 'forward' || props.kind === 'rotate') {
+      return (<input
+        type="number"
+        value={props.value}
+        onChange={(e) => {
+          const value = parseFloat(e.target.value);
 
-        props.onChange({...props, value });
-      }}
-    />
-  );
+          props.onChange({ ...props, value });
+        }}
+      />);
+    } else {
+      return;
+    }
+  };
 
   const onKindChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-    if (ev.target.value === 'forward') {
-      props.onChange({ ...props, kind: 'forward', value: 100 });
-    } else if (ev.target.value === 'rotate') {
-      props.onChange({ ...props, kind: 'rotate', value: 100 });
-    }
+    const kind = ev.target.value as lsystem.Operation['kind'];
+    const op = defaultOperations[kind];
+    props.onChange({ ...op, label: props.label });
   }
 
   return (
