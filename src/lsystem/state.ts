@@ -80,16 +80,29 @@ const addOperation = (state: State): State => ({
 });
 
 
-export const lsystemState = () => {
-  const [state, setState] = useState<State>({
-    entries: [
-      { kind: 'formula', id: uuid(), value: { label: 'A', value: ['A', 'B']} },
-      { kind: 'operation', id: uuid(), value: { label: 'B', kind: 'forward', value: 50 } },
-    ],
-    lastLabel: 'B',
-    iterations: 3,
-    start: undefined,
-  });
+const defaultState: State = {
+  entries: [
+    { kind: 'formula', id: uuid(),
+      value: { label: 'A', value: ['B', '-', 'A', '-', 'B']} },
+    { kind: 'formula', id: uuid(),
+      value: { label: 'B', value: ['A', '+', 'B', '+', 'A']} },
+    { kind: 'operation', id: uuid(),
+      value: { label: 'A', kind: 'forward', value: 10 } },
+    { kind: 'operation', id: uuid(),
+      value: { label: 'B', kind: 'forward', value: 10 } },
+    { kind: 'operation', id: uuid(),
+      value: { label: '+', kind: 'rotate', value: 60 } },
+    { kind: 'operation', id: uuid(),
+      value: { label: '-', kind: 'rotate', value: -60 } },
+  ],
+  lastLabel: 'C',
+  iterations: 5,
+  start: undefined,
+};
+
+
+export const lsystemState = (initialState = defaultState) => {
+  const [state, setState] = useState<State>(initialState);
 
   return {
     state,
