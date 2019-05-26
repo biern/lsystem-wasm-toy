@@ -66,10 +66,10 @@ export default function Operation(props: OperationProps) {
           label: ev.target.value.toUpperCase()[0],
         })}
       />
-      =
+      <span style={{margin: "0.5em"}}>=</div>
       <select
-          value={props.kind}
-          onChange={onKindChange}
+        value={props.kind}
+        onChange={onKindChange}
       >
         {operationKinds.map((k) => (<option value={k}>{k}</option>))}
       </select>

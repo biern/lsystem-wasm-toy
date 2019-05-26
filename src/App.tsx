@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import * as React from 'react';
+import styled from 'styled-components'
 
 import Formula from './Components/Formula';
 import Operation from './Components/Operation';
@@ -52,44 +53,57 @@ export default function App() {
       >
         <h2>LSystem</h2>
         {entries}
-        <div>
-          iterations:
-          <input
-            type="number"
-            size={1}
-            onChange={(ev) => actions.setIterations(parseInt(ev.target.value))}
-            value={state.iterations}
-            style={{
-              marginLeft: '1em',
-              width: '3em',
-            }}
-          />
-        </div>
-        <button onClick={actions.addFormula}>
-          Add formula
-        </button>
-        <button onClick={actions.addOperation}>
-          Add operation
-        </button>
+        <SpacedRow>
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            height: "2rem",
+            lineHeight: "2rem",
+          }}>
+            <span>iterations:</span>
+            <input
+              id="iterations"
+              type="number"
+              size={1}
+              onChange={(ev) => actions.setIterations(parseInt(ev.target.value))}
+              value={state.iterations}
+              style={{
+                marginLeft: '1em',
+                width: '4.5em',
+              }}
+            />
+          </div>
+        </SpacedRow>
+        <SpacedRow style={{
+          display: "flex",
+          justifyContent: "space-around",
+        }}>
+          <button onClick={actions.addFormula}>
+            Add formula
+          </button>
+          <button onClick={actions.addOperation}>
+            Add operation
+          </button>
+        </SpacedRow>
         <div>
           {system.fold(
              (err) => err,
              () => '',
           )}
         </div>
+          </div>
+          <canvas
+            style={{
+              flexGrow: 1,
+              border: "1px solid black",
+              cursor: "pointer",
+            }}
+            ref={canvasEl}
+            onClick={(ev) => actions.setStartPosition(
+              getCursorPosition(canvasEl.current!, ev)
+            )}
+          />
       </div>
-      <canvas
-        style={{
-          flexGrow: 1,
-          border: "1px solid black",
-          cursor: "pointer",
-        }}
-        ref={canvasEl}
-        onClick={(ev) => actions.setStartPosition(
-          getCursorPosition(canvasEl.current!, ev)
-        )}
-      />
-    </div>
   );
 }
 
@@ -131,3 +145,8 @@ function EntryControls(props: EntryControlsProps) {
     </div>
   );
 }
+
+const SpacedRow = styled.div`
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+`;

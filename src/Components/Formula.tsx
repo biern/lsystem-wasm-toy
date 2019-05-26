@@ -24,7 +24,7 @@ export default function Formula(props: FormulaProps) {
           label: ev.target.value.toUpperCase()[0],
         })}
       />
-      =
+      <span style={{margin: "0.5em"}}>=</div>
       <input
         value={props.value.join('')}
         onChange={(ev) => props.onChange({
