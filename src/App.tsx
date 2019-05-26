@@ -116,10 +116,18 @@ function EntryControls(props: EntryControlsProps) {
       style={{
         display: "flex",
         flexDirection: "row",
+        justifyContent: "space-between",
       }}
     >
       {props.child}
-      <button onClick={props.onRemove}>x</button>
+    <button
+    style={{
+      padding: '0px',
+    }}
+    onClick={props.onRemove}
+    >
+    x
+        </button>
     </div>
   );
 }
